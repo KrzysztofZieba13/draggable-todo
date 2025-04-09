@@ -3,13 +3,18 @@ import Task from './Task';
 type TodoColumnPropsType = {
   circleColor: string;
   category: 'TODO' | 'DOING' | 'DONE' | string;
+  onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type CircleStyleColorType = {
   [key: string]: string;
 };
 
-function TodoColumn({ circleColor, category }: TodoColumnPropsType) {
+function TodoColumn({
+  circleColor,
+  onOpenTaskDetails,
+  category,
+}: TodoColumnPropsType) {
   const circleStyleColor: CircleStyleColorType = {
     green: 'bg-emerald-300',
     yellow: 'bg-amber-300',
@@ -27,9 +32,15 @@ function TodoColumn({ circleColor, category }: TodoColumnPropsType) {
         ></div>
         {category} ( 4 )
       </div>
-      <Task subtasksCount={2}>Zadanie 1</Task>
-      <Task subtasksCount={3}>Zadanie 2</Task>
-      <Task subtasksCount={1}>Zadanie 3</Task>
+      <Task subtasksCount={2} onOpenTaskDetails={onOpenTaskDetails}>
+        Zadanie 1
+      </Task>
+      <Task subtasksCount={3} onOpenTaskDetails={onOpenTaskDetails}>
+        Zadanie 2
+      </Task>
+      <Task subtasksCount={1} onOpenTaskDetails={onOpenTaskDetails}>
+        Zadanie 3
+      </Task>
     </div>
   );
 }

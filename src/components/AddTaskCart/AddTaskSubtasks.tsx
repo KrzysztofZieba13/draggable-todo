@@ -1,4 +1,5 @@
 import { X } from '@phosphor-icons/react';
+import Button from '../ui/Button';
 
 function AddTaskSubtasks() {
   return (
@@ -32,12 +33,7 @@ function AddTaskSubtasks() {
           <X className="text-lg" />
         </button>
       </div>
-      <button
-        type="button"
-        className="mt-2 cursor-pointer rounded-sm bg-slate-100 py-1.5 text-slate-800 duration-300 hover:bg-slate-300"
-      >
-        + Add New Subtask
-      </button>
+      <Button type="secondary">+ Add New Subtask</Button>
     </div>
   );
 }
