@@ -6,7 +6,7 @@ type TodoPropsType = {
 
 function Todo({ onOpenTaskDetails }: TodoPropsType) {
   return (
-    <div className="mt-16 min-h-dvh bg-slate-900">
+    <div className="mt-16 min-h-[90dvh] bg-slate-900 lg:mt-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:px-4">
       <TodoColumn
         category="TODO"
         circleColor="green"

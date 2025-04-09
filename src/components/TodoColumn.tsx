@@ -25,10 +25,10 @@ function TodoColumn({
   };
 
   return (
-    <div className="p-4">
-      <div className="mb-4 flex items-center gap-2 text-slate-400">
+    <div className="p-4 lg:px-0">
+      <div className="mb-4 flex items-center gap-2 text-xs text-slate-400">
         <div
-          className={`h-4 w-4 rounded-full ${circleStyleColor[circleColor]}`}
+          className={`h-3 w-3 rounded-full ${circleStyleColor[circleColor]}`}
         ></div>
         {category} ( 4 )
       </div>
@@ -40,6 +40,12 @@ function TodoColumn({
       </Task>
       <Task subtasksCount={1} onOpenTaskDetails={onOpenTaskDetails}>
         Zadanie 3
+      </Task>
+      <Task subtasksCount={1} onOpenTaskDetails={onOpenTaskDetails}>
+        Zadanie 4
+      </Task>
+      <Task subtasksCount={1} onOpenTaskDetails={onOpenTaskDetails}>
+        Zadanie 5
       </Task>
     </div>
   );
