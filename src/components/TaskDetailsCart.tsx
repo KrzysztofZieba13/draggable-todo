@@ -10,7 +10,7 @@ type AddTaskCartPropsType = {
 function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
   return (
     <CartModal>
-      <CartModalHeader onCloseModalCart={onCloseModalCart} title="Task 1" />
+      <CartModalHeader onHandleModalCart={onCloseModalCart} title="Task 1" />
       <p className="text-sm/relaxed text-slate-400">
         Merge frontend branch and backend branch after achieve first milestone
       </p>

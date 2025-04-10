@@ -1,10 +1,12 @@
-import TodoColumn from './TodoColumn';
+import CreateNewCategory from './Columns/CreateNewCategory';
+import TodoColumn from './Columns/TodoColumn';
 
 type TodoPropsType = {
   onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  onOpenCreateColumn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function Todo({ onOpenTaskDetails }: TodoPropsType) {
+function Todo({ onOpenTaskDetails, onOpenCreateColumn }: TodoPropsType) {
   return (
     <div className="mt-16 min-h-[90dvh] bg-slate-900 lg:mt-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:px-4">
       <TodoColumn
@@ -22,11 +24,12 @@ function Todo({ onOpenTaskDetails }: TodoPropsType) {
         circleColor="blue"
         onOpenTaskDetails={onOpenTaskDetails}
       />
-      <TodoColumn
+      <CreateNewCategory onHandleModalCart={onOpenCreateColumn} />
+      {/* <TodoColumn
         category="SUGGESTED"
         circleColor="yellow"
         onOpenTaskDetails={onOpenTaskDetails}
-      />
+      /> */}
     </div>
   );
 }

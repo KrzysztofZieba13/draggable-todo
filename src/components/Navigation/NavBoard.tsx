@@ -41,7 +41,7 @@ function NavBoard() {
       </nav>
 
       <div>
-        <p className="absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 bg-slate-800 text-xs text-nowrap text-slate-300">
+        <p className="absolute bottom-1 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 bg-slate-800 text-xs text-nowrap text-slate-300">
           Made with <Heart className="text-emerald-700" /> by Krzysztof Zięba
         </p>
       </div>

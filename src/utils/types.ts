@@ -1,4 +1,8 @@
 export type CartModalHeaderPropsType = {
   title: string;
-  onCloseModalCart: React.Dispatch<React.SetStateAction<boolean>>;
+  onHandleModalCart: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type HandleCartPropsType = {
+  onHandleModalCart: React.Dispatch<React.SetStateAction<boolean>>;
 };

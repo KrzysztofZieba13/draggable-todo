@@ -19,7 +19,7 @@ function Header({ onOpenTaskFormCart }: HeaderPropsType) {
             onClick={() => setIsOpen((is) => !is)}
           >
             <CaretDown
-              className={`${isOpen ? 'rotate-180' : 'rotate-0'} duration-300`}
+              className={`${isOpen ? 'rotate-180' : 'rotate-0'} duration-300 lg:hidden`}
             />
           </button>
         </div>
