@@ -37,15 +37,19 @@ function TodoColumn({
         ></div>
         {category} ( 4 )
       </div>
-      {todos.map((todo: ItemTodoType) => (
-        <Task
-          key={todo.id}
-          subtasksCount={todo.subtasks.length}
-          onOpenTaskDetails={onOpenTaskDetails}
-        >
-          {todo.title}
-        </Task>
-      ))}
+      {todos.map((todo: ItemTodoType) => {
+        if (todo.status !== category) return;
+        return (
+          <Task
+            key={todo.id}
+            subtasks={todo.subtasks}
+            onOpenTaskDetails={onOpenTaskDetails}
+            taskId={todo.id}
+          >
+            {todo.title}
+          </Task>
+        );
+      })}
     </div>
   );
 }

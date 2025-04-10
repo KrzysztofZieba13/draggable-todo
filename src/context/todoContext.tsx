@@ -15,9 +15,9 @@ function TodoProvider({ children }: ProviderTypes) {
       description:
         'Merge frontend branch and backend branch after achieve first milestone',
       subtasks: [
-        { task: 'Subtask 1', status: false },
-        { task: 'Subtask 2', status: true },
-        { task: 'Subtask 3', status: false },
+        { id: 1, task: 'Subtask 1', status: false },
+        { id: 2, task: 'Subtask 2', status: true },
+        { id: 3, task: 'Subtask 3', status: false },
       ],
       status: 'TODO',
     },
@@ -27,9 +27,9 @@ function TodoProvider({ children }: ProviderTypes) {
       description:
         'Merge frontend branch and backend branch after achieve first milestone',
       subtasks: [
-        { task: 'Subtask 1', status: false },
-        { task: 'Subtask 2', status: true },
-        { task: 'Subtask 3', status: false },
+        { id: 1, task: 'Subtask 1', status: false },
+        { id: 2, task: 'Subtask 2', status: true },
+        { id: 3, task: 'Subtask 3', status: false },
       ],
       status: 'DOING',
     },
@@ -39,13 +39,15 @@ function TodoProvider({ children }: ProviderTypes) {
       description:
         'Merge frontend branch and backend branch after achieve first milestone',
       subtasks: [
-        { task: 'Subtask 1', status: false },
-        { task: 'Subtask 2', status: true },
-        { task: 'Subtask 3', status: false },
+        { id: 1, task: 'Subtask 1', status: false },
+        { id: 2, task: 'Subtask 2', status: true },
+        { id: 3, task: 'Subtask 3', status: false },
       ],
       status: 'DONE',
     },
   ]);
+
+  const [currentTodo, setCurrentTodo] = useState<ItemTodoType | null>(null);
 
   function saveTodo(todo: ItemTodoType) {
     const newTodo: ItemTodoType = {
@@ -59,17 +61,29 @@ function TodoProvider({ children }: ProviderTypes) {
     setTodos([...todos, newTodo]);
   }
 
-  function updateTodo(id: number) {
+  function updateTodo(id: number, newStatus: string) {
     todos.filter((todo: ItemTodoType) => {
       if (todo.id === id) {
-        todo.status = 'DONE';
+        todo.status = newStatus;
         setTodos([...todos]);
       }
     });
   }
 
+  function getTodo(id: number) {
+    if (!todos) return;
+
+    const todo: ItemTodoType | undefined = todos.find(
+      (todo: ItemTodoType) => todo.id === id,
+    );
+
+    setCurrentTodo(todo || null);
+  }
+
   return (
-    <TodoContext.Provider value={{ todos, saveTodo, updateTodo }}>
+    <TodoContext.Provider
+      value={{ todos, currentTodo, saveTodo, updateTodo, getTodo }}
+    >
       {children}
     </TodoContext.Provider>
   );

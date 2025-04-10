@@ -7,7 +7,8 @@ export type HandleCartPropsType = {
   onHandleModalCart: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type SubtaskType = {
+export type SubtaskType = {
+  id: number;
   task: string;
   status: boolean;
 };
@@ -17,11 +18,13 @@ export interface ItemTodoType {
   title: string;
   description: string;
   subtasks: SubtaskType[];
-  status: 'TODO' | 'DOING' | 'DONE' | string;
+  status: string;
 }
 
 export type TodoContextType = {
   todos: ItemTodoType[];
+  currentTodo: ItemTodoType | null;
   saveTodo: (todo: ItemTodoType) => void;
-  updateTodo: (id: number) => void;
+  updateTodo: (id: number, newStatus: string) => void;
+  getTodo: (id: number) => void;
 };
