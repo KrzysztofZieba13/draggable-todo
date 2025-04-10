@@ -5,6 +5,7 @@ import Todo from './components/Todo';
 import AddTaskCart from './components/AddTaskCart/AddTaskCart';
 import TaskDetailsCart from './components/TaskDetailsCart';
 import CreateNewCategoryCart from './components/Columns/CreateNewCategoryCart';
+import TodoProvider from './context/todoContext';
 
 function App() {
   const [isVisibleCreateTaskForm, setIsVisibleCreateTaskForm] =
@@ -15,23 +16,25 @@ function App() {
     useState<boolean>(false);
 
   return (
-    <div className="relative lg:grid lg:grid-cols-[2fr_6fr]">
-      <NavBoard />
-      <Header onOpenTaskFormCart={setIsVisibleCreateTaskForm} />
-      <Todo
-        onOpenTaskDetails={setIsVisibleTaskDetails}
-        onOpenCreateColumn={setIsVisibleCreateColumn}
-      />
-      {isVisibleCreateTaskForm && (
-        <AddTaskCart onCloseModalCart={setIsVisibleCreateTaskForm} />
-      )}
-      {isVisibleTaskDetails && (
-        <TaskDetailsCart onCloseModalCart={setIsVisibleTaskDetails} />
-      )}
-      {isVisibleCreateColumn && (
-        <CreateNewCategoryCart onHandleModalCart={setIsVisibleCreateColumn} />
-      )}
-    </div>
+    <TodoProvider>
+      <div className="relative lg:grid lg:grid-cols-[2fr_6fr]">
+        <NavBoard />
+        <Header onOpenTaskFormCart={setIsVisibleCreateTaskForm} />
+        <Todo
+          onOpenTaskDetails={setIsVisibleTaskDetails}
+          onOpenCreateColumn={setIsVisibleCreateColumn}
+        />
+        {isVisibleCreateTaskForm && (
+          <AddTaskCart onCloseModalCart={setIsVisibleCreateTaskForm} />
+        )}
+        {isVisibleTaskDetails && (
+          <TaskDetailsCart onCloseModalCart={setIsVisibleTaskDetails} />
+        )}
+        {isVisibleCreateColumn && (
+          <CreateNewCategoryCart onHandleModalCart={setIsVisibleCreateColumn} />
+        )}
+      </div>
+    </TodoProvider>
   );
 }
 

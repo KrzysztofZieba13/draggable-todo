@@ -1,6 +1,6 @@
 import CartModal from '../ui/CartModal';
 import CartModalHeader from '../ui/CartModalHeader';
-import { HandleCartPropsType } from '../../utils/types';
+import { HandleCartPropsType } from '../../types/types';
 import InputForm from '../ui/InputForm';
 import SelectForm from '../ui/SelectForm';
 import Button from '../ui/Button';

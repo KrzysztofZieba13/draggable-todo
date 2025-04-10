@@ -1,7 +1,7 @@
 type TaskPropsType = {
   subtasksCount: number;
-  children: string;
   onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  children: string;
 };
 
 function Task({ subtasksCount, onOpenTaskDetails, children }: TaskPropsType) {

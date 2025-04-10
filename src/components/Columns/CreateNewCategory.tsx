@@ -1,4 +1,4 @@
-import { HandleCartPropsType } from '../../utils/types';
+import { HandleCartPropsType } from '../../types/types';
 
 function CreateNewCategory({ onHandleModalCart }: HandleCartPropsType) {
   return (

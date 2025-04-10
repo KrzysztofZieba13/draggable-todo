@@ -1,4 +1,4 @@
-import { CartModalHeaderPropsType } from '../../utils/types';
+import { CartModalHeaderPropsType } from '../../types/types';
 
 function CartModalHeader({
   title,
