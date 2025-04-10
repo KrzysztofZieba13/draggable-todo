@@ -12,7 +12,7 @@ type AddTaskCartPropsType = {
 
 function AddTaskCart({ onCloseModalCart }: AddTaskCartPropsType) {
   return (
-    <CartModal>
+    <CartModal onCloseModalCart={onCloseModalCart}>
       <form className="text-sm">
         <CartModalHeader
           onHandleModalCart={onCloseModalCart}

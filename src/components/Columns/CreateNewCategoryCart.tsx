@@ -7,7 +7,7 @@ import Button from '../ui/Button';
 
 function CreateNewCategoryCart({ onHandleModalCart }: HandleCartPropsType) {
   return (
-    <CartModal>
+    <CartModal onCloseModalCart={onHandleModalCart}>
       <form className="text-sm">
         <CartModalHeader
           onHandleModalCart={onHandleModalCart}
