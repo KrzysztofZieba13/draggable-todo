@@ -1,25 +1,22 @@
 import { useContext } from 'react';
-import { TodoContext } from '../context/todoContext';
-import { TodoContextType, SubtaskType } from '../types/types';
+import { TodoContext, UseTodosContextType } from '../context/todoContext';
+import { ItemTodoType, SubtaskType } from '../types/types';
 
 type TaskPropsType = {
   subtasks: SubtaskType[];
   onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
-  taskId: number;
+  task: ItemTodoType;
   children: string;
 };
 
-function Task({
-  subtasks,
-  onOpenTaskDetails,
-  taskId,
-  children,
-}: TaskPropsType) {
-  const { getTodo } = useContext(TodoContext) as TodoContextType;
+function Task({ subtasks, onOpenTaskDetails, task, children }: TaskPropsType) {
+  const { dispatch, REDUCER_ACTIONS } = useContext(
+    TodoContext,
+  ) as UseTodosContextType;
 
   function handleClick() {
     onOpenTaskDetails(true);
-    getTodo(taskId);
+    dispatch({ type: REDUCER_ACTIONS.GET_TASK, payload: task });
   }
 
   const doneSubtasks = subtasks.reduce((acc, cur) => {

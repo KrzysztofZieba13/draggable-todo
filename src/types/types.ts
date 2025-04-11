@@ -21,10 +21,17 @@ export interface ItemTodoType {
   status: string;
 }
 
+export type TodoStateType = {
+  todos: ItemTodoType[];
+  currentTask?: ItemTodoType;
+};
+
 export type TodoContextType = {
   todos: ItemTodoType[];
   currentTodo: ItemTodoType | null;
   saveTodo: (todo: ItemTodoType) => void;
-  updateTodo: (id: number, newStatus: string) => void;
+  updateTodo: (id: number, newStatus: string, subtasks: SubtaskType[]) => void;
   getTodo: (id: number) => void;
 };
+
+export type TodoReducerActionType = { type: string; payload?: ItemTodoType };

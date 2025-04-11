@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Task from '../Task';
-import { TodoContext } from '../../context/todoContext';
-import { ItemTodoType, TodoContextType } from '../../types/types';
+import { TodoContext, UseTodosContextType } from '../../context/todoContext';
+import { ItemTodoType } from '../../types/types';
 
 type TodoColumnPropsType = {
   circleColor: string;
@@ -18,7 +18,7 @@ function TodoColumn({
   onOpenTaskDetails,
   category,
 }: TodoColumnPropsType) {
-  const { todos } = useContext(TodoContext) as TodoContextType;
+  const { todos } = useContext(TodoContext) as UseTodosContextType;
 
   const circleStyleColor: CircleStyleColorType = {
     green: 'bg-emerald-300',
@@ -44,7 +44,7 @@ function TodoColumn({
             key={todo.id}
             subtasks={todo.subtasks}
             onOpenTaskDetails={onOpenTaskDetails}
-            taskId={todo.id}
+            task={todo}
           >
             {todo.title}
           </Task>

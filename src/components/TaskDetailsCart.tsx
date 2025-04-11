@@ -1,33 +1,43 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Button from './ui/Button';
 import CartModal from './ui/CartModal';
 import CartModalHeader from './ui/CartModalHeader';
 import SelectStatus from './ui/SelectStatus';
-import { TodoContext } from '../context/todoContext';
-import { TodoContextType } from '../types/types';
+import { TodoContext, UseTodosContextType } from '../context/todoContext';
+import { SubtaskType } from '../types/types';
 
 type AddTaskCartPropsType = {
   onCloseModalCart: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
-  const { currentTodo, updateTodo } = useContext(
-    TodoContext,
-  ) as TodoContextType;
-  const [todoStatus, setTodoStatus] = useState<string>('DONE');
+  const { currentTask } = useContext(TodoContext) as UseTodosContextType;
+  const [todoStatus, setTodoStatus] = useState<string>('');
+  const [subtasks, setSubtasks] = useState<SubtaskType[]>([]);
 
-  if (!currentTodo) return <div>Task not found!</div>;
+  useEffect(() => {
+    if (currentTask) {
+      setTodoStatus(currentTask.status.toUpperCase());
+      setSubtasks(currentTask.subtasks);
+    }
+  }, [currentTask]);
 
-  const subtasks = currentTodo.subtasks;
-  const doneSubtasks = subtasks.reduce((acc, cur) => {
-    return cur.status ? acc + 1 : acc;
-  }, 0);
+  if (!currentTask) return <div>Task not found!</div>;
+
+  const doneSubtasks = subtasks.filter((s) => s.status).length;
+
+  function handleUpdateSubtask(todoId: number) {
+    const updatedSubtasks: SubtaskType[] = subtasks.map((subtask) =>
+      subtask.id === todoId ? { ...subtask, status: !subtask.status } : subtask,
+    );
+    setSubtasks(updatedSubtasks);
+  }
 
   function handleSave(e: React.FormEvent) {
     e.preventDefault();
     console.log(todoStatus);
-    if (!currentTodo) return;
-    updateTodo(currentTodo.id, todoStatus.toUpperCase());
+    if (!currentTask) return;
+    // updateTodo(currentTask.id, todoStatus.toUpperCase(), subtasks);
     onCloseModalCart(false);
   }
 
@@ -35,10 +45,10 @@ function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
     <CartModal onCloseModalCart={onCloseModalCart}>
       <CartModalHeader
         onHandleModalCart={onCloseModalCart}
-        title={currentTodo.title}
+        title={currentTask.title}
       />
       <p className="text-sm/relaxed text-slate-400">
-        {currentTodo.description}
+        {currentTask.description}
       </p>
       <h3 className="mt-6 mb-2 text-sm">
         Subtasks ({doneSubtasks} of {subtasks.length})
@@ -54,6 +64,7 @@ function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
               type="checkbox"
               checked={todo.status}
               id={`subtask-${todo.id}`}
+              onChange={() => handleUpdateSubtask(todo.id)}
             />
             <label htmlFor={`subtask-${todo.id}`}>{todo.task}</label>
           </div>
@@ -61,7 +72,7 @@ function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
       </div>
       <form onSubmit={handleSave}>
         <div className="mt-6 text-sm">
-          <SelectStatus onChange={setTodoStatus} />
+          <SelectStatus onChange={setTodoStatus} curState={todoStatus} />
         </div>
         <Button type="primary">Save</Button>
       </form>
