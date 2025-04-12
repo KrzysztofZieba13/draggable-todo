@@ -34,4 +34,10 @@ export type TodoContextType = {
   getTodo: (id: number) => void;
 };
 
-export type TodoReducerActionType = { type: string; payload?: ItemTodoType };
+export type TodoReducerActionType =
+  | { type: string; payload: ItemTodoType }
+  | {
+      type: string;
+      payload: { id: number; changes: Partial<ItemTodoType> };
+    }
+  | { type: string; payload: { id: number } };

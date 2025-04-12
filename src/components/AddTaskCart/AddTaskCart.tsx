@@ -70,8 +70,6 @@ function AddTaskCart({ onCloseModalCart }: AddTaskCartPropsType) {
       status: status.toUpperCase(),
     };
 
-    console.log(task);
-
     dispatch({ type: REDUCER_ACTIONS.ADD_TASK, payload: task });
     onCloseModalCart(false);
   }

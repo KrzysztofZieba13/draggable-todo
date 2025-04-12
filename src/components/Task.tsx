@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { TodoContext, UseTodosContextType } from '../context/todoContext';
 import { ItemTodoType, SubtaskType } from '../types/types';
+import { useDraggable } from '@dnd-kit/core';
 
 type TaskPropsType = {
   subtasks: SubtaskType[];
@@ -10,28 +11,42 @@ type TaskPropsType = {
 };
 
 function Task({ subtasks, onOpenTaskDetails, task, children }: TaskPropsType) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: task.id,
+  });
+
   const { dispatch, REDUCER_ACTIONS } = useContext(
     TodoContext,
   ) as UseTodosContextType;
 
   function handleClick() {
     onOpenTaskDetails(true);
-    dispatch({ type: REDUCER_ACTIONS.GET_TASK, payload: task });
+    dispatch({ type: REDUCER_ACTIONS.GET_TASK, payload: { id: task.id } });
   }
 
   const doneSubtasks = subtasks.reduce((acc, cur) => {
     return cur.status ? acc + 1 : acc;
   }, 0);
 
+  const style = transform
+    ? { transform: `translate(${transform.x}px, ${transform.y}px)` }
+    : undefined;
+
   return (
     <div
       className="mb-3 w-full rounded-sm bg-slate-800 px-4 py-2"
+      {...attributes}
+      {...listeners}
+      ref={setNodeRef}
+      style={style}
       onClick={handleClick}
     >
-      <p className="mb-2 text-slate-200">{children}</p>
-      <p className="text-xs text-slate-500">
-        {doneSubtasks} / {subtasks.length} subtasks
-      </p>
+      <div>
+        <p className="mb-2 text-slate-200">{children}</p>
+        <p className="text-xs text-slate-500">
+          {doneSubtasks} / {subtasks.length} subtasks
+        </p>
+      </div>
     </div>
   );
 }

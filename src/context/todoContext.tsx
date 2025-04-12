@@ -17,42 +17,47 @@ function todoReducer(
 ): TodoStateType {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.ADD_TASK: {
-      if (!action.payload)
+      const newTask = action.payload as ItemTodoType;
+
+      if (!newTask)
         throw new Error('action.payload missing in ADD_TASK action');
-      return { ...state, todos: [...state.todos, action.payload] };
+
+      return { ...state, todos: [...state.todos, newTask] };
     }
 
     case REDUCER_ACTION_TYPE.UPDATE_TASK: {
       if (!action.payload)
         throw new Error('action.payload missing in UPDATE_TASK action');
 
-      const { id, status, subtasks } = action.payload;
+      const { id, changes } = action.payload as {
+        id: number;
+        changes: Partial<ItemTodoType>;
+      };
 
-      if (!id) throw new Error('id missing in UPDATE_TASK action.payload');
+      if (!id || !changes)
+        throw new Error('id or changes missing in UPDATE_TASK action.payload');
 
       const updatedTodos = state.todos.map((todo) =>
-        todo.id === id ? { ...todo, status, subtasks } : todo,
+        todo.id === id ? { ...todo, ...changes } : todo,
       );
 
       const updatedCurrentTask =
         state.currentTask?.id === id
-          ? { ...state.currentTask, status, subtasks }
+          ? { ...state.currentTask, ...changes }
           : state.currentTask;
 
       return { ...state, todos: updatedTodos, currentTask: updatedCurrentTask };
     }
 
     case REDUCER_ACTION_TYPE.GET_TASK: {
-      if (!action.payload)
-        throw new Error('action payload missing in GET_TASK action');
+      const { id: taskId } = action.payload as { id: number };
 
-      const { id: taskId } = action.payload;
+      if (!taskId) throw new Error('id missing in GET_TASK action.payload');
 
-      const requestedTask: ItemTodoType | undefined = state.todos.find(
-        (todo: ItemTodoType) => todo.id === taskId,
-      );
+      const requestedTask = state.todos.find((todo) => todo.id === taskId);
 
       if (!requestedTask) throw new Error('Task not found');
+
       return { ...state, currentTask: requestedTask };
     }
 

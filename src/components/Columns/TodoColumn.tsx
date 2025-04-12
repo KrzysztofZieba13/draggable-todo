@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import Task from '../Task';
 import { TodoContext, UseTodosContextType } from '../../context/todoContext';
 import { ItemTodoType } from '../../types/types';
+import { useDroppable } from '@dnd-kit/core';
 
 type TodoColumnPropsType = {
   circleColor: string;
@@ -18,6 +19,7 @@ function TodoColumn({
   onOpenTaskDetails,
   category,
 }: TodoColumnPropsType) {
+  const { setNodeRef } = useDroppable({ id: category });
   const { todos } = useContext(TodoContext) as UseTodosContextType;
 
   const circleStyleColor: CircleStyleColorType = {
@@ -30,7 +32,7 @@ function TodoColumn({
   };
 
   return (
-    <div className="p-4 lg:px-0">
+    <div className="p-4 lg:px-0" ref={setNodeRef}>
       <div className="mb-4 flex items-center gap-2 text-xs text-slate-400">
         <div
           className={`h-3 w-3 rounded-full ${circleStyleColor[circleColor]}`}
