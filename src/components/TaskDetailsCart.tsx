@@ -11,33 +11,44 @@ type AddTaskCartPropsType = {
 };
 
 function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
-  const { currentTask } = useContext(TodoContext) as UseTodosContextType;
+  const { currentTask, dispatch, REDUCER_ACTIONS } = useContext(
+    TodoContext,
+  ) as UseTodosContextType;
   const [todoStatus, setTodoStatus] = useState<string>('');
-  const [subtasks, setSubtasks] = useState<SubtaskType[]>([]);
 
   useEffect(() => {
     if (currentTask) {
       setTodoStatus(currentTask.status.toUpperCase());
-      setSubtasks(currentTask.subtasks);
     }
   }, [currentTask]);
 
   if (!currentTask) return <div>Task not found!</div>;
 
-  const doneSubtasks = subtasks.filter((s) => s.status).length;
+  const doneSubtasks = currentTask.subtasks.filter((s) => s.status).length;
 
   function handleUpdateSubtask(todoId: number) {
-    const updatedSubtasks: SubtaskType[] = subtasks.map((subtask) =>
-      subtask.id === todoId ? { ...subtask, status: !subtask.status } : subtask,
+    if (!currentTask) return;
+
+    const updatedSubtasks: SubtaskType[] = currentTask.subtasks.map(
+      (subtask) =>
+        subtask.id === todoId
+          ? { ...subtask, status: !subtask.status }
+          : subtask,
     );
-    setSubtasks(updatedSubtasks);
+
+    dispatch({
+      type: REDUCER_ACTIONS.UPDATE_TASK,
+      payload: { ...currentTask, subtasks: updatedSubtasks },
+    });
   }
 
   function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    console.log(todoStatus);
     if (!currentTask) return;
-    // updateTodo(currentTask.id, todoStatus.toUpperCase(), subtasks);
+    dispatch({
+      type: REDUCER_ACTIONS.UPDATE_TASK,
+      payload: { ...currentTask, status: todoStatus },
+    });
     onCloseModalCart(false);
   }
 
@@ -51,10 +62,10 @@ function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
         {currentTask.description}
       </p>
       <h3 className="mt-6 mb-2 text-sm">
-        Subtasks ({doneSubtasks} of {subtasks.length})
+        Subtasks ({doneSubtasks} of {currentTask.subtasks.length})
       </h3>
       <div className="text-sm">
-        {subtasks.map((todo) => (
+        {currentTask.subtasks.map((todo) => (
           <div
             key={todo.id}
             className="mb-1 flex items-center gap-2 rounded-sm bg-slate-800 px-4 py-2"
@@ -72,7 +83,10 @@ function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
       </div>
       <form onSubmit={handleSave}>
         <div className="mt-6 text-sm">
-          <SelectStatus onChange={setTodoStatus} curState={todoStatus} />
+          <SelectStatus
+            onChange={setTodoStatus}
+            curState={currentTask.status}
+          />
         </div>
         <Button type="primary">Save</Button>
       </form>

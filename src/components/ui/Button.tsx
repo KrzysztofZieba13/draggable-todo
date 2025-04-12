@@ -1,14 +1,16 @@
 type ButtonTypeProps = {
   type: 'primary' | 'secondary';
   children: React.ReactNode;
+  onClick?: () => void;
 };
 
-function Button({ type, children }: ButtonTypeProps) {
+function Button({ type, children, onClick }: ButtonTypeProps) {
   if (type === 'secondary')
     return (
       <button
         type="button"
         className="mt-2 cursor-pointer rounded-sm bg-slate-100 py-1.5 text-slate-800 duration-300 hover:bg-slate-300"
+        onClick={onClick}
       >
         + Add New Subtask
       </button>

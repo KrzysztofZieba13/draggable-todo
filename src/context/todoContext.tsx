@@ -30,11 +30,16 @@ function todoReducer(
 
       if (!id) throw new Error('id missing in UPDATE_TASK action.payload');
 
-      const updatedTodo = state.todos.map((todo) =>
+      const updatedTodos = state.todos.map((todo) =>
         todo.id === id ? { ...todo, status, subtasks } : todo,
       );
 
-      return { ...state, todos: [...updatedTodo] };
+      const updatedCurrentTask =
+        state.currentTask?.id === id
+          ? { ...state.currentTask, status, subtasks }
+          : state.currentTask;
+
+      return { ...state, todos: updatedTodos, currentTask: updatedCurrentTask };
     }
 
     case REDUCER_ACTION_TYPE.GET_TASK: {
@@ -55,8 +60,6 @@ function todoReducer(
       return state;
   }
 }
-
-// const initTodoState: TodoStateType = { todos: [] };
 
 function useTodoContext() {
   const [{ todos, currentTask }, dispatch] = useReducer(todoReducer, {

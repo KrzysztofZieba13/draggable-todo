@@ -1,39 +1,36 @@
-import { X } from '@phosphor-icons/react';
 import Button from '../ui/Button';
+import AddTaskSubtask from './AddTaskSubtask';
+import { SubtaskType } from '../../types/types';
 
-function AddTaskSubtasks() {
+type AddTaskSubtaskType = {
+  subtasks: SubtaskType[];
+  handleSubtask: (item: SubtaskType) => void;
+  handleAddSubtask: () => void;
+  handleDeleteSubtask: (item: SubtaskType) => void;
+};
+
+function AddTaskSubtasks({
+  subtasks,
+  handleAddSubtask,
+  handleSubtask,
+  handleDeleteSubtask,
+}: AddTaskSubtaskType) {
   return (
     <div className="mb-4 flex flex-col gap-1">
       <label>Subtasks</label>
-      <div className="mb-1 flex gap-2">
-        <input
-          id="title"
-          type="text"
-          className="w-full rounded-sm border-2 border-slate-500 px-1 py-1 placeholder-slate-500"
-          placeholder="e.g Merge branches"
+      {Array.from({ length: subtasks.length }).map((_, index) => (
+        <AddTaskSubtask
+          key={index}
+          index={index}
+          onDelete={handleDeleteSubtask}
+          value={subtasks[index]}
+          onChange={handleSubtask}
         />
-        <button
-          type="button"
-          className="cursor-pointer duration-300 hover:text-slate-400"
-        >
-          <X className="text-lg" />
-        </button>
-      </div>
-      <div className="flex gap-2">
-        <input
-          id="title"
-          type="text"
-          className="w-full rounded-sm border-2 border-slate-500 px-1 py-1 placeholder-slate-500"
-          placeholder="e.g Merge branches"
-        />
-        <button
-          type="button"
-          className="cursor-pointer duration-300 hover:text-slate-400"
-        >
-          <X className="text-lg" />
-        </button>
-      </div>
-      <Button type="secondary">+ Add New Subtask</Button>
+      ))}
+
+      <Button type="secondary" onClick={handleAddSubtask}>
+        + Add New Subtask
+      </Button>
     </div>
   );
 }
