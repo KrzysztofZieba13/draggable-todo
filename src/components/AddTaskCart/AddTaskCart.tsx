@@ -3,11 +3,15 @@ import Button from '../ui/Button';
 import CartModal from '../ui/CartModal';
 import CartModalHeader from '../ui/CartModalHeader';
 import InputForm from '../ui/InputForm';
-import SelectForm from '../ui/SelectForm';
+// import SelectForm from '../ui/SelectForm';
 import AddTaskDescription from './AddTaskDescription';
 import AddTaskSubtasks from './AddTaskSubtasks';
 import { ItemTodoType, SubtaskType } from '../../types/types';
 import { TodoContext, UseTodosContextType } from '../../context/todoContext';
+import {
+  CategoryContext,
+  UseCategoryContextType,
+} from '../../context/categoryContext';
 
 type AddTaskCartPropsType = {
   onCloseModalCart: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,10 +21,14 @@ function AddTaskCart({ onCloseModalCart }: AddTaskCartPropsType) {
   const { dispatch, REDUCER_ACTIONS } = useContext(
     TodoContext,
   ) as UseTodosContextType;
+  const {
+    dispatch: dispatchCategory,
+    REDUCER_ACTIONS: REDUCER_CATEGORY_ACTIONS,
+  } = useContext(CategoryContext) as UseCategoryContextType;
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [subtasksItem, setSubtasksItem] = useState<SubtaskType[]>([]);
-  const [status, setStatus] = useState<string>('TODO');
+  // const [status, setStatus] = useState<string>('TODO');
 
   function handleSubtask(item: SubtaskType) {
     const subtaskExist = subtasksItem.find(
@@ -67,10 +75,14 @@ function AddTaskCart({ onCloseModalCart }: AddTaskCartPropsType) {
       title,
       description,
       subtasks: subtasksItem,
-      status: status.toUpperCase(),
+      status: 'TODO',
     };
 
     dispatch({ type: REDUCER_ACTIONS.ADD_TASK, payload: task });
+    dispatchCategory({
+      type: REDUCER_CATEGORY_ACTIONS.UPDATE_CATEGORY,
+      payload: { category: 'TODO' },
+    });
     onCloseModalCart(false);
   }
 
@@ -94,11 +106,11 @@ function AddTaskCart({ onCloseModalCart }: AddTaskCartPropsType) {
           handleAddSubtask={handleAddSubtask}
           handleDeleteSubtask={handleDeleteSubtask}
         />
-        <SelectForm name="Status" onChange={setStatus} value={status}>
+        {/* <SelectForm name="Status" onChange={setStatus} value={status}>
           <option className="bg-slate-800">Todo</option>
           <option className="bg-slate-800">Doing</option>
           <option className="bg-slate-800">Done</option>
-        </SelectForm>
+        </SelectForm> */}
         <Button type="primary">Create Task</Button>
       </form>
     </CartModal>

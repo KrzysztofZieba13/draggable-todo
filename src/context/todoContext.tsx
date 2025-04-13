@@ -1,6 +1,7 @@
 import { createContext, useMemo, useReducer } from 'react';
 import {
   ItemTodoType,
+  ProviderTypes,
   TodoReducerActionType,
   TodoStateType,
 } from '../types/types';
@@ -69,42 +70,42 @@ function todoReducer(
 function useTodoContext() {
   const [{ todos, currentTask }, dispatch] = useReducer(todoReducer, {
     todos: [
-      {
-        id: 1,
-        title: 'Task to do 1',
-        description:
-          'Merge frontend branch and backend branch after achieve first milestone',
-        subtasks: [
-          { id: 1, task: 'Subtask 1', status: false },
-          { id: 2, task: 'Subtask 2', status: true },
-          { id: 3, task: 'Subtask 3', status: false },
-        ],
-        status: 'TODO',
-      },
-      {
-        id: 2,
-        title: 'Task to do 2',
-        description:
-          'Merge frontend branch and backend branch after achieve first milestone',
-        subtasks: [
-          { id: 1, task: 'Subtask 1', status: false },
-          { id: 2, task: 'Subtask 2', status: true },
-          { id: 3, task: 'Subtask 3', status: false },
-        ],
-        status: 'DOING',
-      },
-      {
-        id: 3,
-        title: 'Task to do 3',
-        description:
-          'Merge frontend branch and backend branch after achieve first milestone',
-        subtasks: [
-          { id: 1, task: 'Subtask 1', status: false },
-          { id: 2, task: 'Subtask 2', status: true },
-          { id: 3, task: 'Subtask 3', status: false },
-        ],
-        status: 'DONE',
-      },
+      // {
+      //   id: 1,
+      //   title: 'Task to do 1',
+      //   description:
+      //     'Merge frontend branch and backend branch after achieve first milestone',
+      //   subtasks: [
+      //     { id: 1, task: 'Subtask 1', status: false },
+      //     { id: 2, task: 'Subtask 2', status: true },
+      //     { id: 3, task: 'Subtask 3', status: false },
+      //   ],
+      //   status: 'TODO',
+      // },
+      // {
+      //   id: 2,
+      //   title: 'Task to do 2',
+      //   description:
+      //     'Merge frontend branch and backend branch after achieve first milestone',
+      //   subtasks: [
+      //     { id: 1, task: 'Subtask 1', status: false },
+      //     { id: 2, task: 'Subtask 2', status: true },
+      //     { id: 3, task: 'Subtask 3', status: false },
+      //   ],
+      //   status: 'DOING',
+      // },
+      // {
+      //   id: 3,
+      //   title: 'Task to do 3',
+      //   description:
+      //     'Merge frontend branch and backend branch after achieve first milestone',
+      //   subtasks: [
+      //     { id: 1, task: 'Subtask 1', status: false },
+      //     { id: 2, task: 'Subtask 2', status: true },
+      //     { id: 3, task: 'Subtask 3', status: false },
+      //   ],
+      //   status: 'DONE',
+      // },
     ],
   });
 
@@ -125,35 +126,7 @@ const initTodoContextState: UseTodosContextType = {
 export const TodoContext =
   createContext<UseTodosContextType>(initTodoContextState);
 
-type ProviderTypes = {
-  children: React.ReactNode;
-};
-
 function TodoProvider({ children }: ProviderTypes) {
-  // const [currentTodo, setCurrentTodo] = useState<ItemTodoType | null>(null);
-
-  // function saveTodo(todo: ItemTodoType) {
-  //   const newTodo: ItemTodoType = {
-  //     id: Math.random(),
-  //     title: todo.title,
-  //     description: todo.description,
-  //     subtasks: todo.subtasks,
-  //     status: todo.status,
-  //   };
-
-  //   setTodos([...todos, newTodo]);
-  // }
-
-  // function updateTodo(id: number, newStatus: string, subtasks: SubtaskType[]) {
-  //   todos.filter((todo: ItemTodoType) => {
-  //     if (todo.id === id) {
-  //       todo.subtasks = subtasks;
-  //       todo.status = newStatus;
-  //       setTodos([...todos]);
-  //     }
-  //   });
-  // }
-
   return (
     <TodoContext.Provider value={useTodoContext()}>
       {children}

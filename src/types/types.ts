@@ -26,6 +26,12 @@ export type TodoStateType = {
   currentTask?: ItemTodoType;
 };
 
+export type CategoryStateType = {
+  category: string;
+  color: string;
+  tasksNumber: number;
+};
+
 export type TodoContextType = {
   todos: ItemTodoType[];
   currentTodo: ItemTodoType | null;
@@ -41,3 +47,18 @@ export type TodoReducerActionType =
       payload: { id: number; changes: Partial<ItemTodoType> };
     }
   | { type: string; payload: { id: number } };
+
+export type CategoryReducerActionType =
+  | {
+      type: 'ADD_CATEGORY';
+      payload: CategoryStateType;
+    }
+  | { type: 'REMOVE_CATEGORY'; payload: { category: string } }
+  | {
+      type: 'UPDATE_CATEGORY';
+      payload: Partial<CategoryStateType> & { category: string };
+    };
+
+export type ProviderTypes = {
+  children: React.ReactNode;
+};

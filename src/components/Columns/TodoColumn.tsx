@@ -3,10 +3,12 @@ import Task from '../Task';
 import { TodoContext, UseTodosContextType } from '../../context/todoContext';
 import { ItemTodoType } from '../../types/types';
 import { useDroppable } from '@dnd-kit/core';
+import NoTask from '../NoTask';
 
 type TodoColumnPropsType = {
   circleColor: string;
   category: 'TODO' | 'DOING' | 'DONE' | string;
+  tasksCount: number;
   onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -18,6 +20,7 @@ function TodoColumn({
   circleColor,
   onOpenTaskDetails,
   category,
+  tasksCount,
 }: TodoColumnPropsType) {
   const { setNodeRef } = useDroppable({ id: category });
   const { todos } = useContext(TodoContext) as UseTodosContextType;
@@ -31,16 +34,25 @@ function TodoColumn({
     pink: 'bg-pink-300',
   };
 
+  const tasksInCategory = todos.reduce((acc, cur) => {
+    if (cur.status === category) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
+
   return (
     <div className="p-4 lg:px-0" ref={setNodeRef}>
       <div className="mb-4 flex items-center gap-2 text-xs text-slate-400">
         <div
           className={`h-3 w-3 rounded-full ${circleStyleColor[circleColor]}`}
         ></div>
-        {category} ( 4 )
+        {category} ({tasksInCategory})
       </div>
+      {tasksInCategory === 0 && <NoTask />}
       {todos.map((todo: ItemTodoType) => {
         if (todo.status !== category) return;
+        if (tasksInCategory === 0) return <NoTask key={todo.id} />;
         return (
           <Task
             key={todo.id}
