@@ -1,116 +1,93 @@
+import { v4 as randomId } from 'uuid';
 import { FormEvent, useContext, useState } from 'react';
 import Button from '../ui/Button';
 import CartModal from '../ui/CartModal';
 import CartModalHeader from '../ui/CartModalHeader';
 import InputForm from '../ui/InputForm';
-// import SelectForm from '../ui/SelectForm';
 import AddTaskDescription from './AddTaskDescription';
 import AddTaskSubtasks from './AddTaskSubtasks';
 import { ItemTodoType, SubtaskType } from '../../types/types';
 import { TodoContext, UseTodosContextType } from '../../context/todoContext';
-import {
-  CategoryContext,
-  UseCategoryContextType,
-} from '../../context/categoryContext';
 
-type AddTaskCartPropsType = {
-  onCloseModalCart: React.Dispatch<React.SetStateAction<boolean>>;
-};
+function AddTaskCart() {
+  const { addTask, dispatch, REDUCER_ACTIONS } =
+    useContext<UseTodosContextType>(TodoContext);
 
-function AddTaskCart({ onCloseModalCart }: AddTaskCartPropsType) {
-  const { dispatch, REDUCER_ACTIONS } = useContext(
-    TodoContext,
-  ) as UseTodosContextType;
-  const {
-    dispatch: dispatchCategory,
-    REDUCER_ACTIONS: REDUCER_CATEGORY_ACTIONS,
-  } = useContext(CategoryContext) as UseCategoryContextType;
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [subtasksItem, setSubtasksItem] = useState<SubtaskType[]>([]);
-  // const [status, setStatus] = useState<string>('TODO');
+  const [subtasks, setSubtasks] = useState<SubtaskType[]>([]);
 
-  function handleSubtask(item: SubtaskType) {
-    const subtaskExist = subtasksItem.find(
-      (subtaskItem) => subtaskItem.id === item.id,
-    );
+  function handleSubtasks(
+    actionType: 'ADD' | 'DELETE' | 'CHANGE',
+    subtask?: SubtaskType,
+  ) {
+    if (actionType === 'ADD') {
+      const newSubtask: SubtaskType = {
+        id: randomId(),
+        task: '',
+        status: false,
+      };
+      setSubtasks((state) => [...state, newSubtask]);
+    }
 
-    if (subtaskExist) {
-      setSubtasksItem((prevItems) =>
-        prevItems.map((subtask) =>
-          subtask.id === item.id ? { ...subtask, ...item } : subtask,
+    // Guard statement
+    if (!subtask) return;
+
+    if (actionType === 'CHANGE')
+      setSubtasks((state) =>
+        state.map((cur) =>
+          cur.id === subtask.id ? { ...cur, task: subtask.task } : cur,
         ),
       );
-    } else {
-      setSubtasksItem((prevItems) => [...prevItems, item]);
+
+    if (actionType === 'DELETE') {
+      const filteredSubtasks = subtasks.filter(
+        (currSubtask) => currSubtask.id !== subtask.id,
+      );
+
+      setSubtasks(filteredSubtasks);
     }
   }
 
-  function handleAddSubtask() {
-    const initSubtask: SubtaskType = {
-      id: subtasksItem.length,
-      task: '',
-      status: false,
-    };
-
-    setSubtasksItem((prevItems) => [...prevItems, initSubtask]);
-  }
-
-  function handleDeleteSubtask(item: SubtaskType) {
-    const filteredSubtasks = subtasksItem.filter(
-      (subtaks) => subtaks.id !== item.id,
-    );
-
-    setSubtasksItem(filteredSubtasks);
-  }
-
-  function handleCreateTask(e: FormEvent) {
+  function handleAddSubtask(e: FormEvent) {
     e.preventDefault();
-    const task: ItemTodoType = {
-      id: Number(
-        Math.floor(Math.random() * 1000)
-          .toString()
-          .slice(0, 3),
-      ),
+
+    const newTask: ItemTodoType = {
+      id: randomId(),
       title,
       description,
-      subtasks: subtasksItem,
+      subtasks,
       status: 'TODO',
     };
 
-    dispatch({ type: REDUCER_ACTIONS.ADD_TASK, payload: task });
-    dispatchCategory({
-      type: REDUCER_CATEGORY_ACTIONS.UPDATE_CATEGORY,
-      payload: { category: 'TODO' },
-    });
-    onCloseModalCart(false);
+    addTask(newTask);
   }
 
   return (
-    <CartModal onCloseModalCart={onCloseModalCart}>
-      <form className="text-sm" onSubmit={handleCreateTask}>
+    <CartModal
+      onCloseModalCart={() =>
+        dispatch({ type: REDUCER_ACTIONS.CLOSE_ADD_TASK_CART })
+      }
+    >
+      <form className="text-sm" onSubmit={handleAddSubtask}>
         <CartModalHeader
-          onHandleModalCart={onCloseModalCart}
+          onHandleModalCart={() =>
+            dispatch({ type: REDUCER_ACTIONS.CLOSE_ADD_TASK_CART })
+          }
           title="Add New Task"
         />
         <InputForm
-          title="Title"
-          eg="Merge branches"
-          onChange={setTitle}
-          value={title}
+          inputLabel="Task name"
+          inputValue={title}
+          exampleValue="Merge branches"
+          onChangeInputValue={setTitle}
         />
-        <AddTaskDescription value={description} onChange={setDescription} />
-        <AddTaskSubtasks
-          handleSubtask={(item) => handleSubtask(item)}
-          subtasks={subtasksItem}
-          handleAddSubtask={handleAddSubtask}
-          handleDeleteSubtask={handleDeleteSubtask}
+        <AddTaskDescription
+          descValue={description}
+          onChangeDescValue={setDescription}
         />
-        {/* <SelectForm name="Status" onChange={setStatus} value={status}>
-          <option className="bg-slate-800">Todo</option>
-          <option className="bg-slate-800">Doing</option>
-          <option className="bg-slate-800">Done</option>
-        </SelectForm> */}
+        <AddTaskSubtasks handleSubtasks={handleSubtasks} subtasks={subtasks} />
+
         <Button type="primary">Create Task</Button>
       </form>
     </CartModal>

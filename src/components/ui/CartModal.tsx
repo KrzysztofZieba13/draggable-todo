@@ -3,12 +3,12 @@ import { useCloseModal } from '../../hooks/useCloseModal';
 
 type CartModalPropsType = {
   children: React.ReactNode;
-  onCloseModalCart: React.Dispatch<React.SetStateAction<boolean>>;
+  onCloseModalCart: () => void;
 };
 
 function CartModal({ children, onCloseModalCart }: CartModalPropsType) {
   const ref = useRef<HTMLDivElement | null>(null);
-  useCloseModal(ref, () => onCloseModalCart(false));
+  useCloseModal(ref, onCloseModalCart);
 
   return (
     <div className="fixed inset-0 z-20 overflow-y-auto bg-slate-900/50 text-slate-50 backdrop-blur-xs">

@@ -1,12 +1,11 @@
 import { CaretDown } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import BoardNaviagtionList from './Navigation/BoardNaviagtionList';
+import { TodoContext, UseTodosContextType } from '../context/todoContext';
 
-type HeaderPropsType = {
-  onOpenTaskFormCart: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-function Header({ onOpenTaskFormCart }: HeaderPropsType) {
+function Header() {
+  const { REDUCER_ACTIONS, dispatch } =
+    useContext<UseTodosContextType>(TodoContext);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -24,7 +23,7 @@ function Header({ onOpenTaskFormCart }: HeaderPropsType) {
           </button>
         </div>
         <div
-          onClick={() => onOpenTaskFormCart(true)}
+          onClick={() => dispatch({ type: REDUCER_ACTIONS.OPEN_ADD_TASK_CART })}
           className="cursor-pointer rounded-sm bg-emerald-500 px-2.5 py-0.5 text-lg duration-300 hover:bg-emerald-600"
         >
           +

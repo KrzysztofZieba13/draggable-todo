@@ -4,31 +4,25 @@ import { SubtaskType } from '../../types/types';
 
 type AddTaskSubtaskType = {
   subtasks: SubtaskType[];
-  handleSubtask: (item: SubtaskType) => void;
-  handleAddSubtask: () => void;
-  handleDeleteSubtask: (item: SubtaskType) => void;
+  handleSubtasks: (
+    actionType: 'ADD' | 'DELETE' | 'CHANGE',
+    subtask?: SubtaskType,
+  ) => void;
 };
 
-function AddTaskSubtasks({
-  subtasks,
-  handleAddSubtask,
-  handleSubtask,
-  handleDeleteSubtask,
-}: AddTaskSubtaskType) {
+function AddTaskSubtasks({ subtasks, handleSubtasks }: AddTaskSubtaskType) {
   return (
     <div className="mb-4 flex flex-col gap-1">
       <label>Subtasks</label>
-      {Array.from({ length: subtasks.length }).map((_, index) => (
+      {subtasks.map((subtask) => (
         <AddTaskSubtask
-          key={index}
-          index={index}
-          onDelete={handleDeleteSubtask}
-          value={subtasks[index]}
-          onChange={handleSubtask}
+          key={subtask.id}
+          subtask={subtask}
+          onAction={handleSubtasks}
         />
       ))}
 
-      <Button type="secondary" onClick={handleAddSubtask}>
+      <Button type="secondary" onClick={() => handleSubtasks('ADD')}>
         + Add New Subtask
       </Button>
     </div>

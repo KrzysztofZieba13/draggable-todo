@@ -17,12 +17,15 @@ function columnReducer(
 ) {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.ADD_CATEGORY: {
-      const { category, color, tasksNumber } = action.payload;
+      const { category, color, tasksNumber, categoryId } = action.payload;
+      console.log(action.payload);
 
       if (!category || !color || tasksNumber === undefined)
         throw new Error('action.payload is missing in ADD_CATEGORY action');
 
-      return [...state, { category, color, tasksNumber }];
+      return [...state, { category, color, tasksNumber, categoryId }].sort(
+        (a, b) => a.categoryId - b.categoryId,
+      );
     }
 
     case REDUCER_ACTION_TYPE.UPDATE_CATEGORY: {
@@ -32,7 +35,7 @@ function columnReducer(
         throw new Error('action.payload is missing in UPDATE_CATEGORY action');
 
       const requestedCategory: CategoryStateType | undefined = state.find(
-        (cat) => cat.category === category.toUpperCase(),
+        (cat) => cat.category.toUpperCase() === category.toUpperCase(),
       );
       if (!requestedCategory)
         throw new Error('Requested category to update not found');
@@ -43,11 +46,13 @@ function columnReducer(
       };
 
       const filteredCategories: CategoryStateType[] = state.filter(
-        (cat) => cat.category !== category.toUpperCase(),
+        (cat) => cat.category.toUpperCase() !== category.toUpperCase(),
       );
 
       filteredCategories.unshift(updatedCategory);
-      return [...filteredCategories];
+      return [...filteredCategories].sort(
+        (a, b) => a.categoryId - b.categoryId,
+      );
     }
 
     default:
@@ -57,9 +62,9 @@ function columnReducer(
 
 function useCategoryContext() {
   const [categories, dispatch] = useReducer(columnReducer, [
-    { category: 'TODO', color: 'green', tasksNumber: 0 },
-    { category: 'DOING', color: 'red', tasksNumber: 0 },
-    { category: 'DONE', color: 'blue', tasksNumber: 0 },
+    { categoryId: 0, category: 'TODO', color: 'green', tasksNumber: 0 },
+    { categoryId: 1, category: 'DOING', color: 'red', tasksNumber: 0 },
+    { categoryId: 2, category: 'DONE', color: 'blue', tasksNumber: 0 },
   ]);
 
   const REDUCER_ACTIONS = useMemo(() => REDUCER_ACTION_TYPE, []);

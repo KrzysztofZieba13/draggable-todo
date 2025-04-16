@@ -1,14 +1,12 @@
 import { useContext } from 'react';
 import Task from '../Task';
-import { TodoContext, UseTodosContextType } from '../../context/todoContext';
-import { ItemTodoType } from '../../types/types';
 import { useDroppable } from '@dnd-kit/core';
+import { TodoContext, UseTodosContextType } from '../../context/todoContext';
 import NoTask from '../NoTask';
 
 type TodoColumnPropsType = {
   circleColor: string;
   category: 'TODO' | 'DOING' | 'DONE' | string;
-  tasksCount: number;
   onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -20,10 +18,9 @@ function TodoColumn({
   circleColor,
   onOpenTaskDetails,
   category,
-  tasksCount,
 }: TodoColumnPropsType) {
+  const { todos } = useContext<UseTodosContextType>(TodoContext);
   const { setNodeRef } = useDroppable({ id: category });
-  const { todos } = useContext(TodoContext) as UseTodosContextType;
 
   const circleStyleColor: CircleStyleColorType = {
     green: 'bg-emerald-300',
@@ -34,12 +31,8 @@ function TodoColumn({
     pink: 'bg-pink-300',
   };
 
-  const tasksInCategory = todos.reduce((acc, cur) => {
-    if (cur.status === category) {
-      return acc + 1;
-    }
-    return acc;
-  }, 0);
+  const selectedTodos = todos.filter((todo) => todo.status === category);
+  const noTodos = selectedTodos.length === 0;
 
   return (
     <div className="p-4 lg:px-0" ref={setNodeRef}>
@@ -47,23 +40,17 @@ function TodoColumn({
         <div
           className={`h-3 w-3 rounded-full ${circleStyleColor[circleColor]}`}
         ></div>
-        {category} ({tasksInCategory})
+        {category} ({selectedTodos.length})
       </div>
-      {tasksInCategory === 0 && <NoTask />}
-      {todos.map((todo: ItemTodoType) => {
-        if (todo.status !== category) return;
-        if (tasksInCategory === 0) return <NoTask key={todo.id} />;
-        return (
-          <Task
-            key={todo.id}
-            subtasks={todo.subtasks}
-            onOpenTaskDetails={onOpenTaskDetails}
-            task={todo}
-          >
-            {todo.title}
+      {noTodos ? (
+        <NoTask />
+      ) : (
+        selectedTodos.map((task) => (
+          <Task onOpenTaskDetails={onOpenTaskDetails} task={task} key={task.id}>
+            {task.title}
           </Task>
-        );
-      })}
+        ))
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 export type CartModalHeaderPropsType = {
   title: string;
-  onHandleModalCart: React.Dispatch<React.SetStateAction<boolean>>;
+  onHandleModalCart: () => void;
 };
 
 export type HandleCartPropsType = {
@@ -8,13 +8,13 @@ export type HandleCartPropsType = {
 };
 
 export type SubtaskType = {
-  id: number;
+  id: string;
   task: string;
   status: boolean;
 };
 
 export interface ItemTodoType {
-  id: number;
+  id: string;
   title: string;
   description: string;
   subtasks: SubtaskType[];
@@ -23,10 +23,11 @@ export interface ItemTodoType {
 
 export type TodoStateType = {
   todos: ItemTodoType[];
-  currentTask?: ItemTodoType;
+  isVisibleAddTaskCart: boolean;
 };
 
 export type CategoryStateType = {
+  categoryId: number;
   category: string;
   color: string;
   tasksNumber: number;
@@ -41,12 +42,14 @@ export type TodoContextType = {
 };
 
 export type TodoReducerActionType =
-  | { type: string; payload: ItemTodoType }
+  | { type: 'ADD_TASK'; payload: ItemTodoType }
+  | { type: 'CLOSE_ADD_TASK_CART' }
+  | { type: 'OPEN_ADD_TASK_CART' }
   | {
-      type: string;
+      type: 'UPDATE_TASK';
       payload: { id: number; changes: Partial<ItemTodoType> };
     }
-  | { type: string; payload: { id: number } };
+  | { type: 'DELETE_TASK'; payload: { id: number } };
 
 export type CategoryReducerActionType =
   | {

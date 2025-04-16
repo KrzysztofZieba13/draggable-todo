@@ -21,6 +21,7 @@ function CreateNewCategoryCart({ onHandleModalCart }: HandleCartPropsType) {
     e.preventDefault();
 
     const newCategory: CategoryStateType = {
+      categoryId: Date.now(),
       category,
       color,
       tasksNumber: 0,
