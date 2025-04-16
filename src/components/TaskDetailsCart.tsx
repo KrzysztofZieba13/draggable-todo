@@ -1,16 +1,38 @@
+import { FormEvent, useContext, useState } from 'react';
 import Button from './ui/Button';
 import CartModal from './ui/CartModal';
 import CartModalHeader from './ui/CartModalHeader';
 import SelectStatus from './ui/SelectStatus';
+import { TodoContext, UseTodosContextType } from '../context/todoContext';
+import { UpdateTaskDataType } from '../types/types';
 
-type AddTaskCartPropsType = {
-  onCloseModalCart: React.Dispatch<React.SetStateAction<boolean>>;
-};
+function TaskDetailsCart() {
+  const { dispatch, REDUCER_ACTIONS, selectedTask, closeTaskDetailsCart } =
+    useContext<UseTodosContextType>(TodoContext);
 
-function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
+  const [newStatus, setNewStatus] = useState<string>(selectedTask.status || '');
+
+  function handleUpdateTask(e: FormEvent) {
+    e.preventDefault();
+
+    const update: UpdateTaskDataType = {
+      id: selectedTask.id,
+      changes: { status: newStatus },
+    };
+
+    closeTaskDetailsCart(update);
+  }
+
+  function handleCloseModalCart() {
+    dispatch({ type: REDUCER_ACTIONS.CLOSE_TASK_DETAILS_CART });
+  }
+
   return (
-    <CartModal onCloseModalCart={onCloseModalCart}>
-      <CartModalHeader onHandleModalCart={onCloseModalCart} title={'title'} />
+    <CartModal onCloseModalCart={handleCloseModalCart}>
+      <CartModalHeader
+        onHandleModalCart={handleCloseModalCart}
+        title={selectedTask.title}
+      />
       <p className="text-sm/relaxed text-slate-400">{'DESC'}</p>
       <h3 className="mt-6 mb-2 text-sm">
         Subtasks ({0} of {1})
@@ -27,9 +49,9 @@ function TaskDetailsCart({ onCloseModalCart }: AddTaskCartPropsType) {
           <label htmlFor={`subtask-1`}>Subtask1</label>
         </div>
       </div>
-      <form>
+      <form onSubmit={handleUpdateTask}>
         <div className="mt-6 text-sm">
-          <SelectStatus />
+          <SelectStatus task={newStatus} onChange={setNewStatus} />
         </div>
         <Button type="primary">Save</Button>
       </form>

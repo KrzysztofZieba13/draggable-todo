@@ -24,6 +24,8 @@ export interface ItemTodoType {
 export type TodoStateType = {
   todos: ItemTodoType[];
   isVisibleAddTaskCart: boolean;
+  isVisibleTaskDetailsCart: boolean;
+  selectedTask: ItemTodoType;
 };
 
 export type CategoryStateType = {
@@ -41,13 +43,17 @@ export type TodoContextType = {
   getTodo: (id: number) => void;
 };
 
+export type UpdateTaskDataType = { id: string; changes: Partial<ItemTodoType> };
+
 export type TodoReducerActionType =
   | { type: 'ADD_TASK'; payload: ItemTodoType }
   | { type: 'CLOSE_ADD_TASK_CART' }
   | { type: 'OPEN_ADD_TASK_CART' }
+  | { type: 'OPEN_TASK_DETAILS_CART'; payload: ItemTodoType }
+  | { type: 'CLOSE_TASK_DETAILS_CART' }
   | {
       type: 'UPDATE_TASK';
-      payload: { id: number; changes: Partial<ItemTodoType> };
+      payload: UpdateTaskDataType;
     }
   | { type: 'DELETE_TASK'; payload: { id: number } };
 

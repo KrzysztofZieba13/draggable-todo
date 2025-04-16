@@ -7,18 +7,13 @@ import NoTask from '../NoTask';
 type TodoColumnPropsType = {
   circleColor: string;
   category: 'TODO' | 'DOING' | 'DONE' | string;
-  onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type CircleStyleColorType = {
   [key: string]: string;
 };
 
-function TodoColumn({
-  circleColor,
-  onOpenTaskDetails,
-  category,
-}: TodoColumnPropsType) {
+function TodoColumn({ circleColor, category }: TodoColumnPropsType) {
   const { todos } = useContext<UseTodosContextType>(TodoContext);
   const { setNodeRef } = useDroppable({ id: category });
 
@@ -46,7 +41,7 @@ function TodoColumn({
         <NoTask />
       ) : (
         selectedTodos.map((task) => (
-          <Task onOpenTaskDetails={onOpenTaskDetails} task={task} key={task.id}>
+          <Task task={task} key={task.id}>
             {task.title}
           </Task>
         ))

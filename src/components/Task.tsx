@@ -1,15 +1,16 @@
 import { useContext } from 'react';
 import { TodoContext, UseTodosContextType } from '../context/todoContext';
-import { ItemTodoType, SubtaskType } from '../types/types';
+import { ItemTodoType } from '../types/types';
 import { useDraggable } from '@dnd-kit/core';
 
 type TaskPropsType = {
-  onOpenTaskDetails: React.Dispatch<React.SetStateAction<boolean>>;
   task: ItemTodoType;
   children: string;
 };
 
-function Task({ onOpenTaskDetails, task, children }: TaskPropsType) {
+function Task({ task, children }: TaskPropsType) {
+  const { dispatch, REDUCER_ACTIONS } =
+    useContext<UseTodosContextType>(TodoContext);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
   });
@@ -25,7 +26,12 @@ function Task({ onOpenTaskDetails, task, children }: TaskPropsType) {
       {...listeners}
       ref={setNodeRef}
       style={style}
-      // onClick={handleClick}
+      onClick={() =>
+        dispatch({
+          type: REDUCER_ACTIONS.OPEN_TASK_DETAILS_CART,
+          payload: task,
+        })
+      }
     >
       <div>
         <p className="mb-2 text-slate-200">{children}</p>
